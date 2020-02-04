@@ -21,6 +21,7 @@
 #include <strings.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <limits.h>
 
 ALLOC_DEFINE(qdr_terminus_t);
 
@@ -86,13 +87,23 @@ static inline
 #endif
 int safe_snprintf(char *str, size_t size, const char *format, ...)
 {
+    //max size allowed shoul be max possible int (since printf reutrns an int)
+    if (size < 1 || size > INT_MAX) {
+        return 0;
+    }
+    size_t max_possible_return_value = size-1;
     va_list ap;
     va_start(ap, format);
     int rc = vsnprintf(str, size, format, ap);
     va_end(ap);
 
-    if (size && rc >= size)
-        return size - 1;  // return actual # of bytes written (excluding null)
+    if (rc < 0) { //parsing error!
+        return 0;  //do we want to do this?
+    }
+ 
+    if (rc > max_possible_return_value) { //comparing int with size_t? why?
+        return max_possible_return_value;  // return actual # of bytes written (excluding null)
+    }
     return rc;
 }
 
