@@ -81,7 +81,10 @@ void qdr_terminus_free(qdr_terminus_t *term)
 // do pointer & length arithmetic without overflowing the destination buffer in
 // qdr_terminus_format()
 //
-static inline int safe_snprintf(char *str, size_t size, const char *format, ...)
+#ifndef TESTING
+static inline
+#endif
+int safe_snprintf(char *str, size_t size, const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);

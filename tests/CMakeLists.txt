@@ -39,7 +39,8 @@ set(unit_test_SOURCES
     )
 
 add_executable(unit_tests ${unit_test_SOURCES})
-target_link_libraries(unit_tests qpid-dispatch)
+target_link_libraries(unit_tests  qpid-dispatch)
+#target_link_libraries(unit_tests ${GTEST_LIBRARIES} pthread)
 
 set(unit_test_size_SOURCES
     field_test.c
@@ -58,6 +59,17 @@ target_link_libraries(test-sender ${Proton_LIBRARIES})
 add_executable(test-receiver test-receiver.c)
 target_link_libraries(test-receiver ${Proton_LIBRARIES})
 
+#google tests
+# Locate GTest
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+file(GLOB gtest_SOURCES
+    "*.cpp"
+)
+
+add_executable(gtest_tests ${gtest_SOURCES})
+target_link_libraries(gtest_tests ${GTEST_LIBRARIES} pthread qpid-dispatch-testing)
 
 set(TEST_WRAP ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/run.py)
 
