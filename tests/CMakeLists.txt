@@ -40,7 +40,6 @@ set(unit_test_SOURCES
 
 add_executable(unit_tests ${unit_test_SOURCES})
 target_link_libraries(unit_tests  qpid-dispatch)
-#target_link_libraries(unit_tests ${GTEST_LIBRARIES} pthread)
 
 set(unit_test_size_SOURCES
     field_test.c
@@ -59,6 +58,14 @@ target_link_libraries(test-sender ${Proton_LIBRARIES})
 add_executable(test-receiver test-receiver.c)
 target_link_libraries(test-receiver ${Proton_LIBRARIES})
 
+add_library(qpid-dispatch-unittests-mocks SHARED test_mocks.c)
+#target_include_directories(qpid-dispatch-unittests-mocks PRIVATE ${qpid_dispatch_INCLUDES})
+#target_link_libraries(qpid-dispatch-unittests-mocks ${qpid_dispatch_LIBRARIES})
+set_target_properties(qpid-dispatch-unittests-mocks PROPERTIES
+  LINK_FLAGS "${QPID_DISPATCH_LIB_LINK_FLAGS}")
+install(TARGETS qpid-dispatch-unittests-mocks
+  LIBRARY DESTINATION ${QPID_DISPATCH_HOME})
+
 #google tests
 # Locate GTest
 find_package(GTest REQUIRED)
@@ -69,7 +76,7 @@ file(GLOB gtest_SOURCES
 )
 
 add_executable(gtest_tests ${gtest_SOURCES})
-target_link_libraries(gtest_tests ${GTEST_LIBRARIES} pthread qpid-dispatch-testing)
+target_link_libraries(gtest_tests ${GTEST_LIBRARIES} pthread qpid-dispatch-unittests-mocks qpid-dispatch )
 
 set(TEST_WRAP ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/run.py)
 

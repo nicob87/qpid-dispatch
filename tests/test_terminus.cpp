@@ -37,7 +37,6 @@ TEST(test_safe_snprintf, valid_input) {
     ASSERT_STREQ(output, "somethin");
 
     len = safe_snprintf(output, 0, TEST_MESSAGE);
-    //ASSERT_EQ(LEN, len); // Is this correct? ???
     ASSERT_EQ(0, len); // Is this correct? ???
 
     len = safe_snprintf(output, 1, TEST_MESSAGE);

@@ -76,8 +76,6 @@ void qdr_terminus_free(qdr_terminus_t *term)
     free_qdr_terminus_t(term);
 }
 
-
-#ifdef TESTING
 __attribute__ ((weak))
 int _vsnprintf(char *str, size_t size, const char *format, ...)
 {
@@ -87,15 +85,12 @@ int _vsnprintf(char *str, size_t size, const char *format, ...)
     va_end(ap);
     return rc;
 }
-#endif
 
 // DISPATCH-1461: snprintf() is evil - it returns >= size on overflow.  This
 // wrapper will never return >= size, even if truncated.  This makes it safe to
 // do pointer & length arithmetic without overflowing the destination buffer in
 // qdr_terminus_format()
-#ifndef TESTING
-static inline
-#endif
+// not static to be used  unit-tested
 int safe_snprintf(char *str, size_t size, const char *format, ...)
 {
     //max size allowed shoul be max possible int (since printf reutrns an int)
@@ -105,11 +100,7 @@ int safe_snprintf(char *str, size_t size, const char *format, ...)
     size_t max_possible_return_value = size-1;
     va_list ap;
     va_start(ap, format);
-#ifdef TESTING
     int rc = _vsnprintf(str, size, format, ap);
-#else
-    int rc = vsnprintf(str, size, format, ap);
-#endif
     va_end(ap);
 
     if (rc < 0) { //parsing error!
@@ -136,6 +127,7 @@ void qdr_terminus_format(qdr_terminus_t *term, char *output, size_t *size)
             break;
 
         if (term->coordinator) {
+            /*mock this*/
             len = safe_snprintf(output, *size, "<coordinator>");
             break;
         }
