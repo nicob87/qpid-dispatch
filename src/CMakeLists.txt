@@ -157,7 +157,7 @@ set_target_properties(qpid-dispatch PROPERTIES
 install(TARGETS qpid-dispatch
   LIBRARY DESTINATION ${QPID_DISPATCH_HOME})
 
-add_library(qpid-dispatch-testing SHARED ${qpid_dispatch_SOURCES})
+add_library(qpid-dispatch-testing SHARED ${qpid_dispatch_SOURCES} test_mocks.c)
 target_include_directories(qpid-dispatch-testing PRIVATE ${qpid_dispatch_INCLUDES})
 target_link_libraries(qpid-dispatch-testing ${qpid_dispatch_LIBRARIES})
 set_target_properties(qpid-dispatch-testing PROPERTIES

@@ -3,7 +3,8 @@
 #define TESTING 1
 extern "C" {
 #include <stdio.h>
-#include <stdio.h>
+#include <stdint.h>
+#include <inttypes.h>
 #include <qpid/dispatch/router_core.h>
 #include <../src/router_core/router_core_private.h>
 int safe_snprintf(char *str, size_t size, const char *format, ...);
@@ -12,6 +13,11 @@ int safe_snprintf(char *str, size_t size, const char *format, ...);
 #define OUTPUT_SIZE 128
 #define TEST_MESSAGE "something"
 #define LEN strlen(TEST_MESSAGE)
+
+extern "C" {
+void mock(bool m);
+void mocked_value(int v);
+}
 
 TEST(test_safe_snprintf, valid_input) {
     //size_t size = OUTPUT_SIZE;
@@ -39,6 +45,13 @@ TEST(test_safe_snprintf, valid_input) {
 
     len = safe_snprintf(output, (int)-1, TEST_MESSAGE);
     ASSERT_EQ(0, len); //or worst negative?
+
+    mock(true);
+    mocked_value(-1);
+
+    len = safe_snprintf(output, LEN+10, TEST_MESSAGE);
+    ASSERT_EQ(0, len);
+    mock(false);
 }
 
 TEST(test_safe_snprintf, invalid_input) {
