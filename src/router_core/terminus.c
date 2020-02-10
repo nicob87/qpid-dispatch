@@ -76,9 +76,8 @@ void qdr_terminus_free(qdr_terminus_t *term)
     free_qdr_terminus_t(term);
 }
 
-__attribute__ ((weak))
-int _vsnprintf(char *str, size_t size, const char *format, ...)
-{
+__attribute__((weak)) int _vsnprintf(char *str, size_t size, const char *format,
+                                     ...) {
     va_list ap;
     va_start(ap, format);
     int rc = vsnprintf(str, size, format, ap);
@@ -91,24 +90,25 @@ int _vsnprintf(char *str, size_t size, const char *format, ...)
 // do pointer & length arithmetic without overflowing the destination buffer in
 // qdr_terminus_format()
 // not static to be used  unit-tested
-int safe_snprintf(char *str, size_t size, const char *format, ...)
-{
-    //max size allowed shoul be max possible int (since printf reutrns an int)
-    if (size < 1 || size > INT_MAX) {
+size_t safe_snprintf(char *str, size_t size, const char *format, ...) {
+    // max size allowed should be max possible int (since printf reutrns an
+    // int)
+    if (size == 0 || size > INT_MAX) {
         return 0;
     }
-    size_t max_possible_return_value = size-1;
+    size_t max_possible_return_value = size - 1;
     va_list ap;
     va_start(ap, format);
     int rc = _vsnprintf(str, size, format, ap);
     va_end(ap);
 
-    if (rc < 0) { //parsing error!
-        return 0;  //do we want to do this?
+    if (rc < 0) { // parsing error!
+        return 0; // do we want to do this?
     }
- 
-    if (rc > max_possible_return_value) { //comparing int with size_t? why?
-        return max_possible_return_value;  // return actual # of bytes written (excluding null)
+
+    if (rc > max_possible_return_value) { // comparing int with size_t? why?
+        return max_possible_return_value; // return actual # of bytes
+                                          // written (excluding null)
     }
     return rc;
 }
