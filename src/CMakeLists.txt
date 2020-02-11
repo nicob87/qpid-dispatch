@@ -88,6 +88,7 @@ set(qpid_dispatch_SOURCES
   router_core/route_tables.c
   router_core/management_agent.c
   router_core/terminus.c
+  #router_core/_terminus.c
   router_core/transfer.c
   router_core/core_timer.c
   router_core/modules/edge_router/module.c
@@ -139,6 +140,12 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
     set_property(
       SOURCE python_embedded.c router_pynode.c
       PROPERTY COMPILE_FLAGS -Wno-strict-aliasing)
+endif (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    set_property(
+      SOURCE router_core/_terminus.c
+      PROPERTY COMPILE_FLAGS -Wconversion)
 endif (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 
 # DISPATCH-1384 - for MacOS use flat_namespace instead of 2 level
