@@ -58,7 +58,11 @@ target_link_libraries(test-sender ${Proton_LIBRARIES})
 add_executable(test-receiver test-receiver.c)
 target_link_libraries(test-receiver ${Proton_LIBRARIES})
 
-add_library(qpid-dispatch-unittests-mocks SHARED test_mocks.c)
+file(GLOB test_mocks_SOURCES
+    "*mocks.c"
+)
+
+add_library(qpid-dispatch-unittests-mocks SHARED ${test_mocks_SOURCES})
 #target_include_directories(qpid-dispatch-unittests-mocks PRIVATE ${qpid_dispatch_INCLUDES})
 #target_link_libraries(qpid-dispatch-unittests-mocks ${qpid_dispatch_LIBRARIES})
 set_target_properties(qpid-dispatch-unittests-mocks PROPERTIES
