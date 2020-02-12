@@ -70,17 +70,12 @@ set_target_properties(qpid-dispatch-unittests-mocks PROPERTIES
 install(TARGETS qpid-dispatch-unittests-mocks
   LIBRARY DESTINATION ${QPID_DISPATCH_HOME})
 
-#google tests
-# Locate GTest
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-
-file(GLOB gtest_SOURCES
+file(GLOB unittest_SOURCES
     "*.cpp"
 )
 
-add_executable(gtest_tests ${gtest_SOURCES})
-target_link_libraries(gtest_tests ${GTEST_LIBRARIES} pthread qpid-dispatch-unittests-mocks qpid-dispatch )
+add_executable(c_unittest ${unittest_SOURCES})
+target_link_libraries(c_unittest pthread qpid-dispatch-unittests-mocks qpid-dispatch )
 
 set(TEST_WRAP ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/run.py)
 
